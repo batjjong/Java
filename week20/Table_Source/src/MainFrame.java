@@ -1,3 +1,14 @@
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Vector;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -39,6 +50,7 @@ public class MainFrame extends javax.swing.JFrame {
         btnDelete = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        btnSort = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -51,10 +63,25 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel4.setText("관객 동원");
 
         btnInsert.setText("Insert");
+        btnInsert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInsertActionPerformed(evt);
+            }
+        });
 
         btnUpdate.setText("Update");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         btnDelete.setText("Delete");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -88,6 +115,13 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
+        btnSort.setText("Sort");
+        btnSort.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSortActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -120,7 +154,10 @@ public class MainFrame extends javax.swing.JFrame {
                                 .addComponent(btnUpdate))))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnSort, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -143,8 +180,10 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(txtGallery, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDelete))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnSort)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -152,8 +191,182 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        // TODO add your handling code here:
+        int iCntRow =0;
+        iCntRow = jTable1.getSelectedRow();
+        
+        txtOrder.setText(jTable1.getValueAt(iCntRow, 0).toString());
+        txtMovie.setText(jTable1.getValueAt(iCntRow, 1).toString());
+        txtGallery.setText(jTable1.getValueAt(iCntRow, 2).toString());
+        
     }//GEN-LAST:event_jTable1MouseClicked
+
+    private void btnInsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertActionPerformed
+        int iCntRow = 0;
+        int iOrder = 0;
+        int iGallery = 0;
+        
+        iCntRow = jTable1.getRowCount();
+        for(int i = 0; i<jTable1.getRowCount(); i++){
+            if(jTable1.getValueAt(i,0)==null){
+                iCntRow = i;
+                break;
+            }
+            
+        }
+        iOrder = Integer.parseInt(txtOrder.getText());
+        jTable1.setValueAt(iOrder, iCntRow, 0);
+        
+        jTable1.setValueAt(txtMovie.getText(), iCntRow, 1);
+        
+        iGallery = Integer.parseInt(txtGallery.getText());
+        jTable1.setValueAt(iGallery, iCntRow, 2);
+        
+        
+       
+    }//GEN-LAST:event_btnInsertActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        int iCntRow = 0;
+        int iOrder = 0;
+        int iGallery = 0;        
+        
+        iCntRow = jTable1.getSelectedRow();
+        
+        iOrder = Integer.parseInt(txtOrder.getText());
+        jTable1.setValueAt(iOrder, iCntRow, 0);
+        
+        jTable1.setValueAt(txtMovie.getText(), iCntRow, 1);
+        
+        iGallery = Integer.parseInt(txtGallery.getText());
+        jTable1.setValueAt(iGallery, iCntRow, 2);
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        MakeRowData objRowData;
+        Vector myVC = new Vector();
+
+        int iCntRow = 0;
+        iCntRow = jTable1.getSelectedRow();    //Returns the selected row number
+
+        DefaultTableModel jTableModel = (DefaultTableModel) jTable1.getModel();
+
+        //Step 1 : jTable1 -> myVC
+        for(int iRow = 0; iRow < jTable1.getRowCount(); iRow++){
+            if(jTable1.getValueAt(iRow, 0) != null){
+                objRowData = new MakeRowData();
+                objRowData.strMovie = jTable1.getValueAt(iRow, 1).toString();
+                objRowData.iGallery = Integer.parseInt(jTable1.getValueAt(iRow, 2).toString());
+                myVC.add(objRowData);
+            } else{
+                break;
+            }
+        }
+
+        //Step 2: Remove selected row
+        myVC.removeElementAt(iCntRow);
+        jTableModel.removeRow(iCntRow);
+
+        //Step 3: myVC -> jTable1
+        for(int idx = 0; idx < myVC.size(); idx++){
+            objRowData = (MakeRowData) myVC.get(idx);
+            jTable1.setValueAt(idx+1, idx, 0);
+            jTable1.setValueAt(objRowData.strMovie, idx, 1);
+            jTable1.setValueAt(objRowData.iGallery, idx, 2);
+        }
+
+        //Step 4: Add one dummy row to jTable1
+        String[] strRecord = new String[jTable1.getColumnCount()];
+        jTableModel.addRow(strRecord);
+
+        txtOrder.setText(null);     // Initialize txtOrder
+        txtMovie.setText(null);     // Initialize txtMovie
+        txtGallery.setText(null);   // Initialize txtGallery
+
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSortActionPerformed
+        TableRowSorter<TableModel>objSoter = new TableRowSorter<>(jTable1.getModel());
+        jTable1.setRowSorter(objSoter);
+        ArrayList<RowSorter.SortKey> SortKeys = new ArrayList<>();
+        
+        int columnIndexToSort = 2;
+        SortKeys.add(new RowSorter.SortKey(columnIndexToSort,SortOrder.DESCENDING));
+        objSoter.setSortKeys(SortKeys);
+        objSoter.sort();
+        
+        for(int i = 0; i<jTable1.getRowCount(); i++){
+            if(jTable1.getValueAt(i,0) != null){
+                jTable1.setValueAt(i+1,i,0);
+            }
+            else
+                break;
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        /*MakeRowData objRowData;
+        Vector myVC = new Vector();
+        
+        for(int iRow = 0; iRow < jTable1.getRowCount(); iRow++){
+            if(jTable1.getValueAt(iRow, 0) != null){
+                objRowData = new MakeRowData();
+                objRowData.strMovie = jTable1.getValueAt(iRow, 1).toString();
+                objRowData.iGallery = Integer.parseInt(jTable1.getValueAt(iRow, 2).toString());
+                myVC.add(objRowData);
+            } else{
+                break;
+            }
+        }
+        
+        //myVC.sort()~~~~숙제임 ㅇㅇ
+        Collections.sort(myVC, new GalleryDesc);
+        
+        for(int idx = 0; idx < myVC.size(); idx++){
+            objRowData = (MakeRowData) myVC.get(idx);
+            jTable1.setValueAt(idx+1, idx, 0);
+            jTable1.setValueAt(objRowData.strMovie, idx, 1);
+            jTable1.setValueAt(objRowData.iGallery, idx, 2);
+        }
+        
+        txtOrder.setText(null);     
+        txtMovie.setText(null);     
+        txtGallery.setText(null);   
+        */
+    }//GEN-LAST:event_btnSortActionPerformed
+    public class MakeRowData{
+        public String strMovie;
+        public int iGallery;
+    }
+    
+   /* public class GalleryCompare implements Comparator{
+        public int compare(Object arg0,Object arg1){
+            if(((MakeRowData)arg0).iGallery>((MakeRowData)arg1).iGallery)
+            return -1;
+            
+            else if(((MakeRowData)arg0).iGallery == ((MakeRowData)arg1).iGallery)
+            return Integer.compare(((MakeRowData)arg0).iGallery, ((MakeRowData)arg1).iGallery);
+            
+            else
+                return 1;
+        }
+    }
+    */
 
     /**
      * @param args the command line arguments
@@ -183,6 +396,7 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnInsert;
+    private javax.swing.JButton btnSort;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
